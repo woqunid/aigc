@@ -1,0 +1,243 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f4f8ff;
+  --foreground: #0f172a;
+  --card: rgba(255, 255, 255, 0.65);
+  --card-foreground: #0f172a;
+  --popover: rgba(255, 255, 255, 0.85);
+  --popover-foreground: #0f172a;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --secondary: rgba(255, 255, 255, 0.7);
+  --secondary-foreground: #0f172a;
+  --muted: #e2e8f0;
+  --muted-foreground: #64748b;
+  --accent: rgba(59, 130, 246, 0.1);
+  --accent-foreground: #1d4ed8;
+  --destructive: #ef4444;
+  --destructive-foreground: #fef2f2;
+  --border: rgba(148, 163, 184, 0.15);
+  --input: rgba(255, 255, 255, 0.6);
+  --ring: rgba(59, 130, 246, 0.5);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-display: var(--font-manrope);
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  background-color: var(--background);
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.15), transparent 45%),
+    radial-gradient(circle at top right, rgba(147, 51, 234, 0.1), transparent 45%),
+    radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.08), transparent 45%),
+    linear-gradient(180deg, #f4f8ff 0%, #edf4ff 50%, #e6f0ff 100%);
+  background-attachment: fixed;
+  color: var(--foreground);
+  font-family: var(--font-plex-sans), sans-serif;
+}
+
+a,
+button {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    opacity 180ms ease;
+}
+
+button {
+  cursor: pointer;
+}
+
+.glass-panel {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.45) 100%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow:
+    0 32px 80px -20px rgba(15, 23, 42, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.markdown-body {
+  color: var(--foreground);
+  line-height: 1.75;
+  font-size: 0.98rem;
+  word-break: break-word;
+}
+
+.markdown-body > * + * {
+  margin-top: 1rem;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4 {
+  font-family: var(--font-manrope), sans-serif;
+  letter-spacing: -0.02em;
+  color: #081120;
+}
+
+.markdown-body h1 {
+  font-size: 1.75rem;
+  line-height: 1.25;
+}
+
+.markdown-body h2 {
+  font-size: 1.35rem;
+  line-height: 1.35;
+}
+
+.markdown-body h3 {
+  font-size: 1.1rem;
+  line-height: 1.45;
+}
+
+.markdown-body p,
+.markdown-body li {
+  color: #1f334f;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 1.35rem;
+  list-style-position: outside;
+}
+
+.markdown-body ul {
+  list-style-type: disc;
+}
+
+.markdown-body ol {
+  list-style-type: decimal;
+}
+
+.markdown-body li + li {
+  margin-top: 0.4rem;
+}
+
+.markdown-body li::marker {
+  color: #375275;
+}
+
+.markdown-body blockquote {
+  border-left: 3px solid rgba(37, 99, 235, 0.28);
+  background: rgba(255, 255, 255, 0.62);
+  padding: 0.85rem 1rem;
+  border-radius: 1rem;
+  color: #33507a;
+}
+
+.markdown-body code {
+  border-radius: 0.65rem;
+  background: rgba(15, 23, 42, 0.06);
+  padding: 0.16rem 0.4rem;
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 0.92em;
+}
+
+.markdown-body pre {
+  overflow-x: auto;
+  border-radius: 1rem;
+  background: #081120;
+  padding: 1rem;
+  color: #e2e8f0;
+}
+
+.markdown-body pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.markdown-body hr {
+  border: 0;
+  border-top: 1px solid rgba(148, 163, 184, 0.24);
+  margin: 1.2rem 0;
+}
+
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  padding: 0.75rem 0.9rem;
+  text-align: left;
+}
+
+.markdown-body th {
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.markdown-scroll-area {
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+}
+
+.markdown-scroll-area::-webkit-scrollbar {
+  width: 10px;
+}
+
+.markdown-scroll-area::-webkit-scrollbar-track {
+  background: rgba(226, 232, 240, 0.55);
+  border-radius: 999px;
+}
+
+.markdown-scroll-area::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.85);
+  border-radius: 999px;
+  border: 2px solid rgba(226, 232, 240, 0.45);
+}
+
+.markdown-scroll-area::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.92);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
