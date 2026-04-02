@@ -1,5 +1,5 @@
 import type { RefObject } from "react";
-import { Eye, EyeOff, KeyRound, LoaderCircle, RefreshCw, Server } from "lucide-react";
+import { Eye, EyeOff, LoaderCircle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
