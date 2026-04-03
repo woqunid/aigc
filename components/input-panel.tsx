@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 type InputPanelProps = {
   currentModel?: string;
+  currentModelSource?: string;
   input: string;
   inputError?: string;
   isGenerating: boolean;
@@ -27,6 +28,7 @@ type InputPanelProps = {
 
 export function InputPanel({
   currentModel,
+  currentModelSource,
   input,
   inputError,
   isGenerating,
@@ -49,8 +51,8 @@ export function InputPanel({
             </CardDescription>
             <p className="pt-1 text-xs text-slate-500">
               {isModelConfigured
-                ? `当前模型：${currentModel}`
-                : "尚未确认模型，请点击右侧按钮配置。"}
+                ? `当前模型：${currentModel}${currentModelSource ? ` · ${currentModelSource}` : ""}`
+                : "尚未选择模型，请点击右侧按钮配置。"}
             </p>
           </div>
 

@@ -9,6 +9,7 @@ import {
   EXECUTION_GUARD_PROMPT,
   FIXED_SYSTEM_PROMPT,
 } from "@/lib/prompt";
+import { UpstreamConfigError, resolveUpstreamConfig } from "@/lib/server/openai-config";
 import { resolveOpenAIEndpoints, uniqueUrls } from "@/lib/url";
 
 export const runtime = "nodejs";
@@ -47,7 +48,7 @@ function buildChatCompletionPayload(model: string, input: string) {
   };
 }
 
-export async function POST(request: Request) {
+export async function POST(request: Request) {  
   let body: GenerateRequest;
 
   try {
@@ -56,19 +57,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "请求体必须是合法的 JSON。" }, { status: 400 });
   }
 
-  const baseURL = body.baseURL?.trim() ?? "";
-  const apiKey = body.apiKey?.trim() ?? "";
   const model = body.model?.trim() ?? "";
   const input = body.input?.trim() ?? "";
 
-  if (!baseURL || !apiKey || !model || !input) {
+  if (!model || !input) {
     return NextResponse.json(
-      { error: "请完整填写 Base URL、API Key、模型和输入内容。" },
+      { error: "请完整填写模型和输入内容。" },
       { status: 400 },
     );
   }
 
   try {
+    const { apiKey, baseURL } = resolveUpstreamConfig(body);
     const { apiRoot, chatCompletionsUrl, rawRoot } = resolveOpenAIEndpoints(baseURL);
     const completionCandidates = uniqueUrls([
       chatCompletionsUrl,
@@ -133,6 +133,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ error: lastError }, { status: 502 });
   } catch (error) {
+    if (error instanceof UpstreamConfigError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
+
     return NextResponse.json(
       {
         error:

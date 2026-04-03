@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { extractModelIds, getUpstreamErrorMessage } from "@/lib/openai";
+import { UpstreamConfigError, resolveUpstreamConfig } from "@/lib/server/openai-config";
 import { resolveOpenAIEndpoints, uniqueUrls } from "@/lib/url";
 
 export const runtime = "nodejs";
@@ -19,17 +20,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "请求体必须是合法的 JSON。" }, { status: 400 });
   }
 
-  const baseURL = body.baseURL?.trim() ?? "";
-  const apiKey = body.apiKey?.trim() ?? "";
-
-  if (!baseURL || !apiKey) {
-    return NextResponse.json(
-      { error: "请同时提供 Base URL 和 API Key。" },
-      { status: 400 },
-    );
-  }
-
   try {
+    const {
+      apiKey,
+      baseURL,
+      usingDefaultApiKey,
+      usingDefaultBaseURL,
+    } = resolveUpstreamConfig(body);
+    const preferredModel =
+      usingDefaultApiKey && usingDefaultBaseURL
+        ? process.env.DEFAULT_OPENAI_MODEL?.trim() ?? ""
+        : "";
     const { apiRoot, modelsUrl, rawRoot } = resolveOpenAIEndpoints(baseURL);
     const modelCandidates = uniqueUrls([
       modelsUrl,
@@ -63,7 +64,10 @@ export async function POST(request: Request) {
         const models = extractModelIds(payload);
 
         if (models.length > 0) {
-          return NextResponse.json({ models });
+          return NextResponse.json({
+            models,
+            preferredModel: preferredModel || undefined,
+          });
         }
 
         lastError = `接口请求成功，但没有从 ${candidate} 解析出可选模型。`;
@@ -77,6 +81,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ error: lastError }, { status: 502 });
   } catch (error) {
+    if (error instanceof UpstreamConfigError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
+
     return NextResponse.json(
       {
         error:
