@@ -19,7 +19,7 @@ export function ModeSelector({ onSelectMode }: ModeSelectorProps) {
         <div className="mx-auto w-full max-w-4xl space-y-10">
           <div className="mx-auto flex max-w-3xl items-center justify-center rounded-full border border-slate-200/80 bg-white/75 px-6 py-5 text-center shadow-[0_16px_40px_-28px_rgba(15,23,42,0.28)] backdrop-blur-md sm:px-10">
             <p className="text-xl font-semibold tracking-[-0.03em] text-slate-700 sm:text-3xl">
-              只降aigc用第一个，第二个的作用是降重降aigc，推荐使用第二个，不会改变原意还能降低aigc率
+              只降aigc用第一个，第二个的作用是降重降aigc，推荐使用第二个，不会改变原意还能降低aigc率。<br></br>本项目提供两个国内最新模型，尽量使用自己的apikey项目使用openai格式，模型推荐gemini and claude
             </p>
           </div>
 
