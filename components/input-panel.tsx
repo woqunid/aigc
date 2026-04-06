@@ -15,6 +15,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 type InputPanelProps = {
+  descriptionText: string;
   currentModel?: string;
   currentModelSource?: string;
   input: string;
@@ -27,6 +28,7 @@ type InputPanelProps = {
 };
 
 export function InputPanel({
+  descriptionText,
   currentModel,
   currentModelSource,
   input,
@@ -46,9 +48,7 @@ export function InputPanel({
               <PenLine className="size-6 text-blue-600" />
               论文改写
             </CardTitle>
-            <CardDescription className="text-sm">
-              粘贴段落以降低 AIGC 痕迹，建议每次&nbsp;1000&nbsp;字以内。
-            </CardDescription>
+            <CardDescription className="text-sm">{descriptionText}</CardDescription>
             <p className="pt-1 text-xs text-slate-500">
               {isModelConfigured
                 ? `当前模型：${currentModel}${currentModelSource ? ` · ${currentModelSource}` : ""}`

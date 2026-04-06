@@ -7,8 +7,9 @@ import {
 import {
   buildRewriteUserPrompt,
   EXECUTION_GUARD_PROMPT,
-  FIXED_SYSTEM_PROMPT,
+  getSystemPromptByMode,
 } from "@/lib/prompt";
+import { normalizeRewriteMode, type RewriteMode } from "@/lib/rewrite-mode";
 import { UpstreamConfigError, resolveUpstreamConfig } from "@/lib/server/openai-config";
 import { resolveOpenAIEndpoints, uniqueUrls } from "@/lib/url";
 
@@ -20,6 +21,7 @@ type GenerateRequest = {
   apiKey?: string;
   model?: string;
   input?: string;
+  mode?: string;
 };
 
 const STREAM_HEADERS = {
@@ -29,7 +31,9 @@ const STREAM_HEADERS = {
   "X-Accel-Buffering": "no",
 };
 
-function buildChatCompletionPayload(model: string, input: string) {
+function buildChatCompletionPayload(model: string, input: string, mode: RewriteMode) {
+  const systemPrompt = getSystemPromptByMode(mode);
+
   return {
     model,
     stream: true,
@@ -38,7 +42,7 @@ function buildChatCompletionPayload(model: string, input: string) {
     messages: [
       {
         role: "system" as const,
-        content: `${FIXED_SYSTEM_PROMPT}\n\n${EXECUTION_GUARD_PROMPT}`,
+        content: `${systemPrompt}\n\n${EXECUTION_GUARD_PROMPT}`,
       },
       {
         role: "user" as const,
@@ -59,6 +63,7 @@ export async function POST(request: Request) {
 
   const model = body.model?.trim() ?? "";
   const input = body.input?.trim() ?? "";
+  const mode = normalizeRewriteMode(body.mode);
 
   if (!model || !input) {
     return NextResponse.json(
@@ -87,7 +92,7 @@ export async function POST(request: Request) {
             Accept: "text/event-stream, application/json",
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(buildChatCompletionPayload(model, input)),
+          body: JSON.stringify(buildChatCompletionPayload(model, input, mode)),
           cache: "no-store",
         });
 

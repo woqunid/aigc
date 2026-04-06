@@ -1,10 +1,10 @@
 import { PasswordGate } from "@/components/password-gate";
-import { RewriteStudio } from "@/components/rewrite-studio";
+import { RewriteShell } from "@/components/rewrite-shell";
 
 export default function Home() {
   return (
     <PasswordGate>
-      <RewriteStudio />
+      <RewriteShell />
     </PasswordGate>
   );
 }

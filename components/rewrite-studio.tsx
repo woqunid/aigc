@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { WandSparkles } from "lucide-react";
+import { ArrowLeft, WandSparkles } from "lucide-react";
 import { ConfigPanel } from "@/components/config-panel";
 import { InputPanel } from "@/components/input-panel";
 import { OutputPanel } from "@/components/output-panel";
@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { getRewriteModeMeta, type RewriteMode } from "@/lib/rewrite-mode";
 
 const STORAGE_KEYS = {
   baseURL: "paper-polish-ai.custom-base-url",
@@ -64,7 +65,15 @@ function getModelSourceLabel(mode: ConfigMode) {
   return mode === "custom" ? "自定义 API" : "系统默认";
 }
 
-export function RewriteStudio() {
+type RewriteStudioProps = {
+  rewriteMode: RewriteMode;
+  onBackToModeSelect?: () => void;
+};
+
+export function RewriteStudio({
+  rewriteMode,
+  onBackToModeSelect,
+}: RewriteStudioProps) {
   const [connection, setConnection] = useState<ConnectionConfig>(EMPTY_CONNECTION);
   const [draftConfig, setDraftConfig] = useState<ConnectionConfig>(EMPTY_CONNECTION);
   const [showApiKey, setShowApiKey] = useState(false);
@@ -86,6 +95,11 @@ export function RewriteStudio() {
   const copyTimerRef = useRef<number | null>(null);
   const modelsAbortRef = useRef<AbortController | null>(null);
   const generateAbortRef = useRef<AbortController | null>(null);
+  const currentRewriteMode = getRewriteModeMeta(rewriteMode);
+  const inputDescriptionText =
+    rewriteMode === "reduce-dup-and-aigc"
+      ? "粘贴段落以降低重复率和 AIGC 痕迹，建议每次 1000 字以内。"
+      : "粘贴段落以降低 AIGC 痕迹，建议每次 1000 字以内。";
 
   useEffect(() => {
     const savedMode = window.localStorage.getItem(STORAGE_KEYS.mode);
@@ -359,6 +373,7 @@ export function RewriteStudio() {
           baseURL: connection.mode === "custom" ? connection.baseURL : "",
           model: connection.model,
           input: submittedInput,
+          mode: rewriteMode,
         }),
         signal: controller.signal,
       });
@@ -449,8 +464,37 @@ export function RewriteStudio() {
       <div className="pointer-events-none absolute right-[-8rem] top-16 size-72 rounded-full bg-blue-300/20 blur-3xl" />
 
       <main className="relative mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        <section className="glass-panel flex flex-col gap-4 rounded-[30px] border border-white/70 px-5 py-5 shadow-[0_28px_70px_-42px_rgba(15,23,42,0.38)] sm:flex-row sm:items-center sm:justify-between sm:px-7">
+          <div className="space-y-2">
+            <p className="text-xs font-medium uppercase tracking-[0.22em] text-blue-700/80">
+              当前工作模式
+            </p>
+            <div className="space-y-1">
+              <h1 className="font-display text-2xl font-semibold tracking-[-0.04em] text-slate-900">
+                {currentRewriteMode.title}
+              </h1>
+              <p className="max-w-2xl text-sm leading-6 text-slate-600">
+                {currentRewriteMode.description}
+              </p>
+            </div>
+          </div>
+
+          {onBackToModeSelect ? (
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-full px-5"
+              onClick={onBackToModeSelect}
+            >
+              <ArrowLeft className="size-4" />
+              重新选择模式
+            </Button>
+          ) : null}
+        </section>
+
         <section className="grid gap-6 xl:grid-cols-[minmax(0,470px)_minmax(0,1fr)]">
           <InputPanel
+            descriptionText={inputDescriptionText}
             currentModel={connection.model}
             currentModelSource={getModelSourceLabel(connection.mode)}
             input={input}
