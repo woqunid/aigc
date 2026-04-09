@@ -18,8 +18,8 @@ export function ModeSelector({ onSelectMode }: ModeSelectorProps) {
       <main className="relative mx-auto flex min-h-dvh w-full max-w-5xl flex-col justify-center px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto w-full max-w-4xl space-y-10">
           <div className="mx-auto flex max-w-3xl items-center justify-center rounded-full border border-slate-200/80 bg-white/75 px-6 py-5 text-center shadow-[0_16px_40px_-28px_rgba(15,23,42,0.28)] backdrop-blur-md sm:px-10">
-            <p className="text-xl font-semibold tracking-[-0.03em] text-slate-700 sm:text-3xl">
-              只降aigc用第一个，第二个的作用是降重降aigc，推荐使用第二个，不会改变原意还能降低aigc率。<br></br>本项目提供两个国内最新模型，尽量使用自己的apikey项目使用openai格式，模型推荐gemini and claude
+            <p className="text-xl font-semibold tracking-[-0.03em] text-slate-700 sm:text-3x3">
+              推荐使用第二个会增加字数但是aigc可以为0(查重也会降)不会改变原意，第一个字数不咋变但是降得不多。<br></br>这个项目提供模型(模型配置里面选)，用不了给我发消息。推荐使用自己的apikey。
             </p>
           </div>
 

@@ -1,5 +1,8 @@
 import "server-only";
 
+const REASONING_TAG_NAMES = ["think", "thinking", "reasoning"] as const;
+const STREAM_TAIL_RESERVE_LENGTH = 32;
+
 function asObject(value: unknown) {
   return value && typeof value === "object"
     ? (value as Record<string, unknown>)
@@ -11,31 +14,26 @@ function readTextValue(value: unknown): string {
     return value;
   }
 
+  const record = asObject(value);
+
+  if (record) {
+    return (
+      readTextValue(record.text) ||
+      readTextValue(record.delta) ||
+      readTextValue(record.content) ||
+      readTextValue(record.value) ||
+      readTextValue(record.output_text) ||
+      readTextValue(record.output) ||
+      readTextValue(record.response)
+    );
+  }
+
   if (!Array.isArray(value)) {
     return "";
   }
 
   return value
-    .map((part) => {
-      if (typeof part === "string") {
-        return part;
-      }
-
-      const record = asObject(part);
-      if (!record) {
-        return "";
-      }
-
-      if (typeof record.text === "string") {
-        return record.text;
-      }
-
-      if (typeof record.content === "string") {
-        return record.content;
-      }
-
-      return "";
-    })
+    .map((part) => readTextValue(part))
     .join("");
 }
 
@@ -78,14 +76,17 @@ export function extractCompletionText(payload: unknown) {
   const root = asObject(payload);
   const choices = Array.isArray(root?.choices) ? root.choices : [];
   const firstChoice = asObject(choices[0]);
-  const message = asObject(firstChoice?.message);
-  const delta = asObject(firstChoice?.delta);
 
   return (
-    readTextValue(message?.content) ||
-    readTextValue(delta?.content) ||
+    readTextValue(firstChoice?.message) ||
+    readTextValue(firstChoice?.delta) ||
     readTextValue(firstChoice?.text) ||
-    readTextValue(root?.output_text)
+    readTextValue(root?.output_text) ||
+    readTextValue(root?.text) ||
+    readTextValue(root?.delta) ||
+    readTextValue(root?.content) ||
+    readTextValue(root?.output) ||
+    readTextValue(root?.response)
   );
 }
 
@@ -93,15 +94,149 @@ export function extractStreamingText(payload: unknown) {
   const root = asObject(payload);
   const choices = Array.isArray(root?.choices) ? root.choices : [];
   const firstChoice = asObject(choices[0]);
-  const delta = asObject(firstChoice?.delta);
-  const message = asObject(firstChoice?.message);
 
   return (
-    readTextValue(delta?.content) ||
-    readTextValue(message?.content) ||
+    readTextValue(firstChoice?.delta) ||
+    readTextValue(firstChoice?.message) ||
     readTextValue(firstChoice?.text) ||
-    readTextValue(root?.output_text)
+    readTextValue(root?.output_text) ||
+    readTextValue(root?.text) ||
+    readTextValue(root?.delta) ||
+    readTextValue(root?.content) ||
+    readTextValue(root?.output) ||
+    readTextValue(root?.response)
   );
+}
+
+function removeReasoningBlocks(text: string) {
+  return REASONING_TAG_NAMES.reduce((current, tagName) => {
+    const pattern = new RegExp(
+      `<\\s*${tagName}\\b[^>]*>[\\s\\S]*?<\\s*\\/\\s*${tagName}\\s*>`,
+      "gi",
+    );
+
+    return current.replace(pattern, "");
+  }, text);
+}
+
+function createReasoningStripper() {
+  let buffer = "";
+  let activeTagName: (typeof REASONING_TAG_NAMES)[number] | null = null;
+
+  function findOpeningTag(source: string) {
+    let earliestMatch:
+      | {
+          index: number;
+          fullMatch: string;
+          tagName: (typeof REASONING_TAG_NAMES)[number];
+        }
+      | null = null;
+
+    for (const tagName of REASONING_TAG_NAMES) {
+      const match = new RegExp(`<\\s*${tagName}\\b[^>]*>`, "i").exec(source);
+
+      if (!match || match.index === undefined) {
+        continue;
+      }
+
+      if (!earliestMatch || match.index < earliestMatch.index) {
+        earliestMatch = {
+          index: match.index,
+          fullMatch: match[0],
+          tagName,
+        };
+      }
+    }
+
+    return earliestMatch;
+  }
+
+  function splitVisibleText(source: string) {
+    const lastTagStart = source.lastIndexOf("<");
+
+    if (lastTagStart === -1) {
+      return {
+        visibleText: source,
+        reservedTail: "",
+      };
+    }
+
+    const tail = source.slice(lastTagStart);
+    const normalizedTail = tail.toLowerCase().replace(/\s+/g, "");
+    const couldBeReasoningPrefix = REASONING_TAG_NAMES.some((tagName) => {
+      const openTagPrefix = `<${tagName}`;
+      return (
+        openTagPrefix.startsWith(normalizedTail) ||
+        normalizedTail.startsWith(openTagPrefix)
+      );
+    });
+
+    if (couldBeReasoningPrefix && tail.length <= STREAM_TAIL_RESERVE_LENGTH) {
+      return {
+        visibleText: source.slice(0, lastTagStart),
+        reservedTail: tail,
+      };
+    }
+
+    return {
+      visibleText: source,
+      reservedTail: "",
+    };
+  }
+
+  function feed(chunk: string, isFinal = false) {
+    let output = "";
+    buffer += chunk;
+
+    while (buffer) {
+      if (activeTagName) {
+        const closingMatch = new RegExp(
+          `<\\s*\\/\\s*${activeTagName}\\s*>`,
+          "i",
+        ).exec(buffer);
+
+        if (!closingMatch || closingMatch.index === undefined) {
+          if (isFinal) {
+            buffer = "";
+            activeTagName = null;
+          } else if (buffer.length > STREAM_TAIL_RESERVE_LENGTH) {
+            buffer = buffer.slice(-STREAM_TAIL_RESERVE_LENGTH);
+          }
+          break;
+        }
+
+        buffer = buffer.slice(closingMatch.index + closingMatch[0].length);
+        activeTagName = null;
+        continue;
+      }
+
+      const openingMatch = findOpeningTag(buffer);
+
+      if (!openingMatch) {
+        if (isFinal) {
+          output += buffer;
+          buffer = "";
+        } else {
+          const { visibleText, reservedTail } = splitVisibleText(buffer);
+          output += visibleText;
+          buffer = reservedTail;
+        }
+        break;
+      }
+
+      output += buffer.slice(0, openingMatch.index);
+      buffer = buffer.slice(openingMatch.index + openingMatch.fullMatch.length);
+      activeTagName = openingMatch.tagName;
+    }
+
+    return output;
+  }
+
+  return { feed };
+}
+
+export function sanitizeModelOutput(text: string) {
+  return removeReasoningBlocks(text);
 }
 
 export async function getUpstreamErrorMessage(
@@ -145,6 +280,7 @@ export function createMarkdownStreamFromSSE(
   const reader = upstream.getReader();
   const decoder = new TextDecoder();
   const encoder = new TextEncoder();
+  const reasoningStripper = createReasoningStripper();
   let buffer = "";
 
   const flushEventBlock = (
@@ -165,11 +301,19 @@ export function createMarkdownStreamFromSSE(
     try {
       const text = extractStreamingText(JSON.parse(payload));
       if (text) {
-        controller.enqueue(encoder.encode(text));
+        const sanitizedText = reasoningStripper.feed(text);
+
+        if (sanitizedText) {
+          controller.enqueue(encoder.encode(sanitizedText));
+        }
       }
       return;
     } catch {
-      controller.enqueue(encoder.encode(payload));
+      const sanitizedPayload = reasoningStripper.feed(payload);
+
+      if (sanitizedPayload) {
+        controller.enqueue(encoder.encode(sanitizedPayload));
+      }
     }
   };
 
@@ -196,6 +340,12 @@ export function createMarkdownStreamFromSSE(
 
         if (buffer.trim()) {
           flushEventBlock(buffer, controller);
+        }
+
+        const tail = reasoningStripper.feed("", true);
+
+        if (tail) {
+          controller.enqueue(encoder.encode(tail));
         }
 
         controller.close();

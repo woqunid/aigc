@@ -3,6 +3,7 @@ import {
   createMarkdownStreamFromSSE,
   extractCompletionText,
   getUpstreamErrorMessage,
+  sanitizeModelOutput,
 } from "@/lib/openai";
 import {
   buildRewriteUserPrompt,
@@ -108,7 +109,7 @@ export async function POST(request: Request) {
 
         if (contentType.includes("application/json")) {
           const payload = await upstream.json();
-          const text = extractCompletionText(payload);
+          const text = sanitizeModelOutput(extractCompletionText(payload));
 
           if (!text) {
             lastError = `上游从 ${candidate} 返回成功，但没有生成任何 Markdown 内容。`;

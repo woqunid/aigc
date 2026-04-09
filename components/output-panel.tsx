@@ -13,12 +13,19 @@ type OutputPanelProps = {
   copyFeedback: string;
   error: string;
   isGenerating: boolean;
+  isThinking: boolean;
   output: string;
   statusText: string;
   onCopy: () => void;
 };
 
-function EmptyState({ isGenerating }: { isGenerating: boolean }) {
+function EmptyState({
+  isGenerating,
+  isThinking,
+}: {
+  isGenerating: boolean;
+  isThinking: boolean;
+}) {
   if (isGenerating) {
     return (
       <div className="space-y-3" aria-live="polite">
@@ -28,7 +35,9 @@ function EmptyState({ isGenerating }: { isGenerating: boolean }) {
         <div className="h-4 w-[80%] rounded-full bg-slate-200/70" />
         <div className="flex items-center gap-2 pt-3 text-sm text-muted-foreground">
           <LoaderCircle className="size-4 animate-spin" />
-          正在接收流式内容，Markdown 会边生成边显示。
+          {isThinking
+            ? "模型正在思考中，思考过程不会展示，Markdown 正文生成后会自动显示。"
+            : "正在接收流式内容，Markdown 会边生成边显示。"}
         </div>
       </div>
     );
@@ -55,10 +64,13 @@ export function OutputPanel({
   copyFeedback,
   error,
   isGenerating,
+  isThinking,
   output,
   statusText,
   onCopy,
 }: OutputPanelProps) {
+  const hasOutput = output.trim().length > 0;
+
   return (
     <Card className="xl:sticky xl:top-8">
       <CardHeader className="gap-4 border-b border-blue-100/40 pb-5">
@@ -72,7 +84,7 @@ export function OutputPanel({
               type="button"
               variant="outline"
               onClick={onCopy}
-              disabled={!output}
+              disabled={!hasOutput}
               aria-label="复制完整 Markdown 原文"
             >
               {copyFeedback ? <Check className="size-4" /> : <Copy className="size-4" />}
@@ -90,14 +102,14 @@ export function OutputPanel({
         ) : null}
       </CardHeader>
       <CardContent className="min-h-[560px] pt-6">
-        {output ? (
+        {hasOutput ? (
           <div className="markdown-scroll-area max-h-[58vh] min-h-[420px] overflow-y-auto pr-2 sm:max-h-[62vh] xl:max-h-[70vh]">
             <article className="markdown-body">
               <ReactMarkdown>{output}</ReactMarkdown>
             </article>
           </div>
         ) : (
-          <EmptyState isGenerating={isGenerating} />
+          <EmptyState isGenerating={isGenerating} isThinking={isThinking} />
         )}
       </CardContent>
     </Card>

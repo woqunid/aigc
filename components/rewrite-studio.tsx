@@ -57,6 +57,10 @@ async function readApiError(response: Response) {
   return `请求失败（HTTP ${response.status}）`;
 }
 
+function normalizeGeneratedText(value: string) {
+  return value.replace(/\u0000/g, "");
+}
+
 function isConnectionReady(config: ConnectionConfig) {
   return Boolean(config.model.trim());
 }
@@ -360,7 +364,7 @@ export function RewriteStudio({
     setIsGenerating(true);
     setGenerateError("");
     setOutput("");
-    setStreamStatus("正在建立流式连接...");
+    setStreamStatus("正在思考中...");
 
     try {
       const response = await fetch("/api/generate", {
@@ -388,8 +392,8 @@ export function RewriteStudio({
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
-
-      setStreamStatus("正在生成 Markdown 内容...");
+      let generatedText = "";
+      let hasShownVisibleOutput = false;
 
       while (true) {
         const { done, value } = await reader.read();
@@ -401,13 +405,39 @@ export function RewriteStudio({
         const chunk = decoder.decode(value, { stream: true });
 
         if (chunk) {
-          setOutput((current) => current + chunk);
+          const normalizedChunk = normalizeGeneratedText(chunk);
+
+          if (normalizedChunk) {
+            generatedText += normalizedChunk;
+            setOutput((current) => current + normalizedChunk);
+
+            if (!hasShownVisibleOutput && normalizedChunk.trim()) {
+              hasShownVisibleOutput = true;
+              setStreamStatus("正在生成 Markdown 内容...");
+            }
+          }
         }
       }
 
       const tail = decoder.decode();
       if (tail) {
-        setOutput((current) => current + tail);
+        const normalizedTail = normalizeGeneratedText(tail);
+
+        if (normalizedTail) {
+          generatedText += normalizedTail;
+          setOutput((current) => current + normalizedTail);
+
+          if (!hasShownVisibleOutput && normalizedTail.trim()) {
+            hasShownVisibleOutput = true;
+            setStreamStatus("正在生成 Markdown 内容...");
+          }
+        }
+      }
+
+      if (!generatedText.trim()) {
+        throw new Error(
+          "生成流程已结束，但没有解析到可展示内容。请尝试切换模型，或检查中转接口是否返回了标准文本字段。",
+        );
       }
 
       setStreamStatus("生成完成，可直接复制 Markdown 原文。");
@@ -429,7 +459,7 @@ export function RewriteStudio({
   }
 
   async function handleCopy() {
-    if (!output) {
+    if (!output.trim()) {
       return;
     }
 
@@ -515,6 +545,7 @@ export function RewriteStudio({
             copyFeedback={copyFeedback}
             error={generateError}
             isGenerating={isGenerating}
+            isThinking={isGenerating && !output.trim()}
             output={output}
             statusText={streamStatus}
             onCopy={() => {
