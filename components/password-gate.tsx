@@ -136,19 +136,18 @@ export function PasswordGate({ children }: PasswordGateProps) {
         </div>
       ) : null}
 
-      <div
-        className="flex min-h-screen items-center justify-center bg-white"
-        style={{
-          fontFamily:
-            '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-        }}
-      >
-        <div className="w-full max-w-sm px-6 text-center">
-          <div className="mb-2 text-left text-sm font-medium text-gray-700">
-            输入密码
+      <div className="flex min-h-screen items-center justify-center p-4">
+        <div className="glass-panel w-full max-w-md animate-fade-in-up rounded-2xl p-8 text-center shadow-2xl transition-all duration-300 hover:shadow-[0_45px_100px_-20px_rgba(15,23,42,0.15)]">
+          <div className="mb-8 space-y-2">
+            <h1 className="text-2xl font-bold tracking-tight text-slate-800">
+              欢迎回来
+            </h1>
+            <p className="text-sm text-slate-500">
+              为保护您的资源，请输入通行密码
+            </p>
           </div>
 
-          <div className="flex gap-0">
+          <div className="group relative flex gap-0 rounded-xl bg-white/50 p-1 shadow-sm ring-1 ring-slate-900/5 transition-all focus-within:bg-white/80 focus-within:ring-2 focus-within:ring-primary/30">
             <input
               ref={inputRef}
               type="password"
@@ -156,7 +155,7 @@ export function PasswordGate({ children }: PasswordGateProps) {
               placeholder="请输入您的密码..."
               autoComplete="current-password"
               disabled={isSubmitting}
-              className="flex-1 rounded-l-md border border-gray-300 px-4 py-2 transition-all focus:outline-none focus:ring-1 focus:ring-gray-400 disabled:cursor-not-allowed disabled:bg-gray-100"
+              className="flex-1 bg-transparent px-4 py-3 text-slate-800 transition-all placeholder:text-slate-400 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
               onChange={(event) => {
                 setPassword(event.target.value);
               }}
@@ -170,12 +169,14 @@ export function PasswordGate({ children }: PasswordGateProps) {
             <button
               type="button"
               disabled={isSubmitting}
-              className="rounded-r-md border border-gray-300 border-l-0 bg-gray-300 px-6 py-2 font-medium text-black transition-colors hover:bg-gray-400 disabled:cursor-not-allowed disabled:bg-gray-200"
+              className="relative overflow-hidden rounded-lg bg-slate-900 px-6 py-3 font-medium text-white transition-all hover:bg-slate-800 hover:shadow-lg hover:shadow-slate-900/20 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
               onClick={() => {
                 void checkPassword();
               }}
             >
-              {isSubmitting ? "验证中..." : "进入"}
+              <span className="relative z-10">
+                {isSubmitting ? "验证中..." : "进入系统"}
+              </span>
             </button>
           </div>
         </div>

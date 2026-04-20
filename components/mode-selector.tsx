@@ -10,20 +10,19 @@ type ModeSelectorProps = {
 
 export function ModeSelector({ onSelectMode }: ModeSelectorProps) {
   return (
-    <div className="relative isolate min-h-dvh overflow-hidden bg-white">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.14),transparent_62%)]" />
-      <div className="pointer-events-none absolute left-[-8rem] top-28 size-72 rounded-full bg-sky-100/80 blur-3xl" />
-      <div className="pointer-events-none absolute right-[-10rem] top-20 size-80 rounded-full bg-blue-100/70 blur-3xl" />
-
+    <div className="relative isolate min-h-dvh w-full overflow-hidden">
       <main className="relative mx-auto flex min-h-dvh w-full max-w-5xl flex-col justify-center px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto w-full max-w-4xl space-y-10">
-          <div className="mx-auto flex max-w-3xl items-center justify-center rounded-full border border-slate-200/80 bg-white/75 px-6 py-5 text-center shadow-[0_16px_40px_-28px_rgba(15,23,42,0.28)] backdrop-blur-md sm:px-10">
-            <p className="text-xl font-semibold tracking-[-0.03em] text-slate-700 sm:text-3x3">
-              推荐使用第二个会增加字数但是aigc可以为0(查重也会降)不会改变原意，第一个字数不咋变但是降得不多。<br></br>这个项目提供模型(模型配置里面选)，用不了给我发消息。推荐使用自己的apikey。
+        <div className="mx-auto w-full max-w-4xl space-y-12">
+          <div className="glass-panel animate-fade-in-up mx-auto flex max-w-3xl items-center justify-center rounded-3xl p-6 text-center sm:p-8">
+            <p className="text-lg font-medium leading-relaxed tracking-tight text-slate-700 sm:text-xl">
+              推荐使用第二个会增加字数但是aigc可以为0(查重也会降)不会改变原意，第一个字数不咋变但是降得不多。<br className="hidden sm:block" />
+              <span className="mt-2 block text-slate-500 text-sm">
+                这个项目提供模型（模型配置里面选），用不了给我发消息。推荐使用自己的 API Key。
+              </span>
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-8 md:grid-cols-2">
             {REWRITE_MODE_OPTIONS.map((option, index) => {
               const Icon = index === 0 ? Sparkles : Layers3;
 
@@ -31,36 +30,35 @@ export function ModeSelector({ onSelectMode }: ModeSelectorProps) {
                 <button
                   key={option.value}
                   type="button"
-                  className="group rounded-[30px] border border-slate-200/80 bg-white/88 p-8 text-left shadow-[0_28px_60px_-34px_rgba(15,23,42,0.3)] transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 hover:shadow-[0_32px_72px_-30px_rgba(37,99,235,0.28)]"
+                  className="glass-panel group flex flex-col justify-between gap-8 rounded-[2rem] p-8 text-left transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_45px_100px_-20px_rgba(37,99,235,0.25)] hover:ring-2 hover:ring-blue-400/50"
+                  style={{ animation: `fade-in-up 0.6s ease-out ${index * 0.15}s both` }}
                   onClick={() => {
                     onSelectMode(option.value);
                   }}
                 >
-                  <div className="flex h-full min-h-56 flex-col justify-between gap-8">
-                    <div className="flex size-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
-                      <Icon className="size-7" />
-                    </div>
+                  <div className="flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50/50 text-blue-600 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_4px_14px_-2px_rgba(37,99,235,0.15)] transition-transform duration-300 group-hover:scale-110">
+                    <Icon className="size-8" />
+                  </div>
 
-                    <div className="space-y-4">
-                      <h2 className="text-4xl font-semibold tracking-[-0.04em] text-slate-800">
-                        {option.title}
-                      </h2>
-                      <p className="max-w-sm text-base leading-7 text-slate-500">
-                        {option.description}
-                      </p>
-                    </div>
+                  <div className="space-y-4">
+                    <h2 className="text-3xl font-bold tracking-tight text-slate-800 transition-colors group-hover:text-blue-700">
+                      {option.title}
+                    </h2>
+                    <p className="max-w-sm text-base leading-relaxed text-slate-500 line-clamp-2">
+                      {option.description}
+                    </p>
+                  </div>
 
-                    <div className="pt-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="pointer-events-none rounded-full px-5 text-sm text-slate-700 group-hover:border-blue-300 group-hover:text-blue-700"
-                        tabIndex={-1}
-                      >
-                        进入该模式
-                        <ArrowRight className="size-4" />
-                      </Button>
-                    </div>
+                  <div className="pt-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="pointer-events-none rounded-xl border-blue-200 bg-white/50 px-6 py-5 text-sm font-medium text-slate-700 shadow-sm backdrop-blur-md transition-all group-hover:border-blue-400 group-hover:bg-blue-50 group-hover:text-blue-700"
+                      tabIndex={-1}
+                    >
+                      进入该模式
+                      <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
+                    </Button>
                   </div>
                 </button>
               );

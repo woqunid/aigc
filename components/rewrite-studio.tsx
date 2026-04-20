@@ -493,7 +493,7 @@ export function RewriteStudio({
       <div className="pointer-events-none absolute left-[-12rem] top-28 size-80 rounded-full bg-sky-200/30 blur-3xl" />
       <div className="pointer-events-none absolute right-[-8rem] top-16 size-72 rounded-full bg-blue-300/20 blur-3xl" />
 
-      <main className="relative mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+      <main className="animate-fade-in-up relative mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-6 sm:px-6 lg:px-8 xl:py-10">
         <section className="glass-panel flex flex-col gap-4 rounded-[30px] border border-white/70 px-5 py-5 shadow-[0_28px_70px_-42px_rgba(15,23,42,0.38)] sm:flex-row sm:items-center sm:justify-between sm:px-7">
           <div className="space-y-2">
             <p className="text-xs font-medium uppercase tracking-[0.22em] text-blue-700/80">

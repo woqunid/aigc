@@ -72,7 +72,7 @@ export function OutputPanel({
   const hasOutput = output.trim().length > 0;
 
   return (
-    <Card className="xl:sticky xl:top-8">
+    <Card className="glass-panel flex flex-col overflow-hidden border-white/50 bg-white/30 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] xl:min-h-[720px] xl:sticky xl:top-8">
       <CardHeader className="gap-4 border-b border-blue-100/40 pb-5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-1">
