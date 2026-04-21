@@ -47,7 +47,7 @@ function buildChatCompletionPayload(model: string, input: string, mode: RewriteM
       },
       {
         role: "user" as const,
-        content: buildRewriteUserPrompt(input),
+        content: buildRewriteUserPrompt(input, mode),
       },
     ],
   };

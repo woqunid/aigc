@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Layers3, Sparkles } from "lucide-react";
+import { ArrowRight, FilePenLine, Layers3, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { REWRITE_MODE_OPTIONS, type RewriteMode } from "@/lib/rewrite-mode";
 
@@ -9,10 +9,22 @@ type ModeSelectorProps = {
 };
 
 export function ModeSelector({ onSelectMode }: ModeSelectorProps) {
+  function getModeIcon(mode: RewriteMode) {
+    if (mode === "reduce-dup-and-aigc") {
+      return Layers3;
+    }
+
+    if (mode === "reduce-dup") {
+      return FilePenLine;
+    }
+
+    return Sparkles;
+  }
+
   return (
     <div className="relative isolate min-h-dvh w-full overflow-hidden">
-      <main className="relative mx-auto flex min-h-dvh w-full max-w-5xl flex-col justify-center px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto w-full max-w-4xl space-y-12">
+      <main className="relative mx-auto flex min-h-dvh w-full max-w-6xl flex-col justify-center px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-6xl space-y-12">
           <div className="glass-panel animate-fade-in-up mx-auto flex max-w-3xl items-center justify-center rounded-3xl p-6 text-center sm:p-8">
             <p className="text-lg font-medium leading-relaxed tracking-tight text-slate-700 sm:text-xl">
               推荐使用第二个会增加字数但是aigc可以为0(查重也会降)不会改变原意，第一个字数不咋变但是降得不多。<br className="hidden sm:block" />
@@ -22,9 +34,9 @@ export function ModeSelector({ onSelectMode }: ModeSelectorProps) {
             </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-2">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {REWRITE_MODE_OPTIONS.map((option, index) => {
-              const Icon = index === 0 ? Sparkles : Layers3;
+              const Icon = getModeIcon(option.value);
 
               return (
                 <button

@@ -103,6 +103,8 @@ export function RewriteStudio({
   const inputDescriptionText =
     rewriteMode === "reduce-dup-and-aigc"
       ? "粘贴段落以降低重复率和 AIGC 痕迹，建议每次 1000 字以内。"
+      : rewriteMode === "reduce-dup"
+        ? "粘贴段落以进行学术化降重改写，尽量保持核心观点和专业术语不变。"
       : "粘贴段落以降低 AIGC 痕迹，建议每次 1000 字以内。";
 
   useEffect(() => {

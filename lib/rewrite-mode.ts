@@ -1,4 +1,7 @@
-export type RewriteMode = "reduce-aigc" | "reduce-dup-and-aigc";
+export type RewriteMode =
+  | "reduce-aigc"
+  | "reduce-dup-and-aigc"
+  | "reduce-dup";
 
 export const DEFAULT_REWRITE_MODE: RewriteMode = "reduce-aigc";
 
@@ -13,6 +16,11 @@ export const REWRITE_MODE_OPTIONS = [
     title: "降重降aigc",
     description: "",
   },
+  {
+    value: "reduce-dup",
+    title: "降重",
+    description: "",
+  },
 ] as const satisfies ReadonlyArray<{
   value: RewriteMode;
   title: string;
@@ -20,7 +28,11 @@ export const REWRITE_MODE_OPTIONS = [
 }>;
 
 export function normalizeRewriteMode(mode?: string): RewriteMode {
-  return mode === "reduce-dup-and-aigc" ? mode : DEFAULT_REWRITE_MODE;
+  if (mode === "reduce-dup-and-aigc" || mode === "reduce-dup") {
+    return mode;
+  }
+
+  return DEFAULT_REWRITE_MODE;
 }
 
 export function getRewriteModeMeta(mode: RewriteMode) {
