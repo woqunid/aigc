@@ -20,9 +20,9 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "哈基米",
+  title: "Paper Polish — AI 学术改写仪器",
   description:
-    "输入兼容 OpenAI 的 Base URL 与 API Key，自动检测模型并流式生成 Markdown 版论文/技术文档改写稿。",
+    "面向论文与技术文档的 AI 改写工作台，支持降 AIGC、学术降重、自定义模型与流式 Markdown 输出。",
 };
 
 export default function RootLayout({
@@ -35,7 +35,7 @@ export default function RootLayout({
       lang="zh-CN"
       className={`${manrope.variable} ${plexSans.variable} ${plexMono.variable} h-full scroll-smooth antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background font-sans text-foreground selection:bg-primary/20 selection:text-foreground">
+      <body className="flex min-h-full flex-col bg-background font-sans text-foreground">
         {children}
       </body>
     </html>
