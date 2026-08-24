@@ -28,13 +28,13 @@ export function InputPanel({
   onOpenConfig,
 }: InputPanelProps) {
   return (
-    <section className="instrument-panel flex min-h-[680px] flex-col rounded-[28px]">
-      <header className="border-b border-white/8 px-5 py-5 sm:px-7 sm:py-6">
+    <section className="instrument-panel flex min-h-[660px] flex-col rounded-[24px]">
+      <header className="border-b border-slate-100 px-5 py-5 sm:px-7 sm:py-6">
         <div className="flex items-start justify-between gap-5">
           <div>
             <p className="eyebrow">Source material / input</p>
             <h2 className="mt-4 flex items-center gap-3 font-display text-3xl font-semibold tracking-[-.05em]">
-              <PenLine className="size-5 text-cyan-200" strokeWidth={1.5} />
+              <PenLine className="size-5 text-blue-600" strokeWidth={1.5} />
               原文输入
             </h2>
           </div>
@@ -43,18 +43,18 @@ export function InputPanel({
             模型配置
           </Button>
         </div>
-        <p className="mt-4 max-w-lg text-sm leading-6 text-white/38">{descriptionText}</p>
+        <p className="mt-4 max-w-lg text-sm leading-6 text-slate-500">{descriptionText}</p>
       </header>
 
       <div className="flex flex-1 flex-col p-4 sm:p-6">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/8 bg-white/[.025] px-4 py-3">
-          <div className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[.14em] text-white/36">
-            <span className={isModelConfigured ? "status-dot" : "size-1.5 rounded-full bg-white/20"} />
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-blue-100/80 bg-blue-50/55 px-4 py-3">
+          <div className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[.14em] text-slate-500">
+            <span className={isModelConfigured ? "status-dot" : "size-1.5 rounded-full bg-slate-300"} />
             {isModelConfigured
               ? `${currentModel} / ${currentModelSource ?? "已配置"}`
               : "模型尚未配置"}
           </div>
-          <span className="font-mono text-[9px] uppercase tracking-[.14em] text-white/22">UTF-8 / Markdown</span>
+          <span className="font-mono text-[9px] uppercase tracking-[.14em] text-slate-400">UTF-8 / Markdown</span>
         </div>
 
         <div className="relative flex flex-1 flex-col">
@@ -66,7 +66,7 @@ export function InputPanel({
             onChange={(event) => onInputChange(event.target.value)}
             aria-invalid={Boolean(inputError)}
           />
-          <div className="pointer-events-none absolute bottom-4 right-4 rounded-full border border-white/8 bg-[#090d18]/75 px-3 py-1 font-mono text-[9px] tracking-[.12em] text-white/24 backdrop-blur-md">
+          <div className="pointer-events-none absolute bottom-4 right-4 rounded-full border border-slate-200 bg-white/90 px-3 py-1 font-mono text-[9px] tracking-[.12em] text-slate-400 backdrop-blur-md">
             {input.length} 字符
           </div>
         </div>
@@ -74,7 +74,7 @@ export function InputPanel({
         {inputError ? <p className="mt-3 text-sm text-red-300" role="alert">{inputError}</p> : null}
 
         <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-mono text-[9px] uppercase tracking-[.16em] text-white/24">
+          <p className="font-mono text-[9px] uppercase tracking-[.16em] text-slate-400">
             输入内容仅用于本次生成请求
           </p>
           <Button type="button" size="lg" className="sm:min-w-[220px]" onClick={onGenerate} disabled={isGenerating}>

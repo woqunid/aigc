@@ -1,7 +1,6 @@
 "use client";
 
 import { ArrowUpRight, FilePenLine, Layers3, Sparkles } from "lucide-react";
-import { ArtCanvas } from "@/components/art-canvas";
 import { BrandSignature } from "@/components/brand-signature";
 import { REWRITE_MODE_OPTIONS, type RewriteMode } from "@/lib/rewrite-mode";
 
@@ -22,13 +21,12 @@ export function ModeSelector({ onSelectMode }: ModeSelectorProps) {
 
   return (
     <div className="relative isolate min-h-dvh overflow-hidden">
-      <ArtCanvas />
       <div className="editorial-grid absolute inset-0 -z-10" />
-      <div className="aurora-orb -right-24 top-[-9rem] -z-10 size-[26rem] opacity-70" />
+      <div className="aurora-orb -right-24 top-[-9rem] -z-10 size-[26rem] opacity-80" />
 
       <header className="mx-auto flex w-full max-w-[1500px] items-center justify-between px-5 py-6 sm:px-8 lg:px-12">
         <BrandSignature />
-        <div className="flex items-center gap-3 rounded-full border border-white/8 bg-white/[.025] px-4 py-2 font-mono text-[9px] uppercase tracking-[.18em] text-white/34">
+        <div className="flex items-center gap-3 rounded-full border border-slate-200 bg-white/70 px-4 py-2 font-mono text-[9px] uppercase tracking-[.18em] text-slate-400">
           <span className="status-dot" />
           Engine online
         </div>
@@ -44,11 +42,11 @@ export function ModeSelector({ onSelectMode }: ModeSelectorProps) {
               <span className="display-gradient">改写策略</span>
             </h1>
           </div>
-          <div className="animate-fade-in-up border-l border-white/10 pl-6" style={{ animationDelay: "110ms" }}>
-            <p className="text-sm leading-7 text-white/45">
+          <div className="animate-fade-in-up border-l border-slate-200 pl-6" style={{ animationDelay: "110ms" }}>
+            <p className="text-sm leading-7 text-slate-500">
               每种模式都连接独立的学术改写规则。第二种模式会增加少量字数，但更适合同时处理重复率与 AIGC 痕迹。
             </p>
-            <p className="mt-5 font-mono text-[9px] uppercase tracking-[.18em] text-cyan-200/55">
+            <p className="mt-5 font-mono text-[9px] uppercase tracking-[.18em] text-blue-500">
               推荐优先使用自有 API Key
             </p>
           </div>
@@ -64,37 +62,37 @@ export function ModeSelector({ onSelectMode }: ModeSelectorProps) {
                 key={option.value}
                 type="button"
                 className={[
-                  "instrument-panel group relative flex min-h-[360px] flex-col justify-between rounded-[28px] p-6 text-left transition-all duration-500 hover:-translate-y-2 hover:border-cyan-200/25 hover:shadow-[0_40px_100px_-40px_rgba(75,99,255,.65)] sm:p-8",
+                  "instrument-panel group relative flex min-h-[350px] flex-col justify-between rounded-[24px] p-6 text-left transition-all duration-500 hover:-translate-y-2 hover:border-blue-200 hover:shadow-[0_34px_80px_-38px_rgba(49,87,213,.38)] sm:p-8",
                   details.featured ? "lg:min-h-[430px] lg:-translate-y-4 hover:lg:-translate-y-6" : "lg:min-h-[375px]",
                 ].join(" ")}
                 style={{ animation: `fade-in-up .75s cubic-bezier(.16,1,.3,1) ${160 + index * 100}ms both` }}
                 onClick={() => onSelectMode(option.value)}
               >
                 {details.featured ? (
-                  <span className="absolute right-6 top-6 rounded-full border border-cyan-200/20 bg-cyan-300/10 px-3 py-1 font-mono text-[9px] uppercase tracking-[.16em] text-cyan-200">
+                  <span className="absolute right-6 top-6 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 font-mono text-[9px] uppercase tracking-[.16em] text-blue-600">
                     推荐
                   </span>
                 ) : null}
 
                 <div className="flex items-start justify-between">
-                  <span className="font-mono text-[11px] tracking-[.18em] text-white/30">/{details.number}</span>
-                  {!details.featured ? <span className="status-dot opacity-45" /> : null}
+                  <span className="font-mono text-[11px] tracking-[.18em] text-slate-400">/{details.number}</span>
+                  {!details.featured ? <span className="status-dot opacity-60" /> : null}
                 </div>
 
                 <div>
-                  <span className="mb-7 flex size-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[.045] text-cyan-200 transition-all duration-500 group-hover:rotate-3 group-hover:scale-110 group-hover:border-cyan-200/25 group-hover:bg-cyan-300/10">
+                  <span className="mb-7 flex size-14 items-center justify-center rounded-2xl border border-blue-100 bg-blue-50 text-blue-600 transition-all duration-500 group-hover:rotate-3 group-hover:scale-110 group-hover:border-blue-200 group-hover:bg-blue-100/70">
                     <Icon className="size-6" strokeWidth={1.5} />
                   </span>
                   <p className="eyebrow mb-4">{details.meta}</p>
-                  <h2 className="font-display text-[clamp(2.1rem,3vw,3.5rem)] font-semibold leading-none tracking-[-.055em] text-white">
+                  <h2 className="font-display text-[clamp(2.1rem,3vw,3.5rem)] font-semibold leading-none tracking-[-.055em] text-slate-900">
                     {option.title}
                   </h2>
-                  <p className="mt-5 max-w-sm text-sm leading-7 text-white/40">{option.description}</p>
+                  <p className="mt-5 max-w-sm text-sm leading-7 text-slate-500">{option.description}</p>
                 </div>
 
-                <div className="mt-9 flex items-center justify-between border-t border-white/8 pt-5">
-                  <span className="text-sm font-medium text-white/62 transition-colors group-hover:text-white">进入该模式</span>
-                  <span className="flex size-10 items-center justify-center rounded-full border border-white/10 text-white/55 transition-all duration-300 group-hover:rotate-45 group-hover:border-cyan-200/30 group-hover:bg-cyan-300/10 group-hover:text-cyan-100">
+                <div className="mt-9 flex items-center justify-between border-t border-slate-100 pt-5">
+                  <span className="text-sm font-medium text-slate-600 transition-colors group-hover:text-blue-700">进入该模式</span>
+                  <span className="flex size-10 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-all duration-300 group-hover:rotate-45 group-hover:border-blue-200 group-hover:bg-blue-50 group-hover:text-blue-600">
                     <ArrowUpRight className="size-4" />
                   </span>
                 </div>
@@ -103,7 +101,7 @@ export function ModeSelector({ onSelectMode }: ModeSelectorProps) {
           })}
         </section>
 
-        <footer className="mt-10 flex flex-col gap-3 border-t border-white/8 pt-5 font-mono text-[9px] uppercase tracking-[.18em] text-white/24 sm:flex-row sm:items-center sm:justify-between">
+        <footer className="mt-10 flex flex-col gap-3 border-t border-slate-200 pt-5 font-mono text-[9px] uppercase tracking-[.18em] text-slate-400 sm:flex-row sm:items-center sm:justify-between">
           <span>Paper polish / academic rewrite instrument</span>
           <span>Select mode to initialize workspace</span>
         </footer>

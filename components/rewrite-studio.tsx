@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft, Cpu, ShieldCheck, WandSparkles } from "lucide-react";
-import { ArtCanvas } from "@/components/art-canvas";
 import { BrandSignature } from "@/components/brand-signature";
 import { ConfigPanel } from "@/components/config-panel";
 import { InputPanel } from "@/components/input-panel";
@@ -493,27 +492,26 @@ export function RewriteStudio({
 
   return (
     <div className="relative isolate min-h-dvh overflow-hidden">
-      <ArtCanvas />
-      <div className="editorial-grid absolute inset-0 -z-10" />
-      <div className="aurora-orb -right-36 top-[-16rem] -z-10 size-[32rem] opacity-50" />
+      <div className="editorial-grid absolute inset-x-0 top-0 -z-10 h-[30rem]" />
+      <div className="aurora-orb -right-40 top-[-18rem] -z-10 size-[34rem] opacity-60" />
 
-      <header className="mx-auto flex w-full max-w-[1600px] items-center justify-between px-5 py-5 sm:px-8 lg:px-10">
+      <header className="mx-auto mt-4 flex w-[calc(100%-2rem)] max-w-[1520px] items-center justify-between rounded-2xl border border-slate-200/80 bg-white/80 px-5 py-4 shadow-[0_16px_50px_-38px_rgba(25,42,78,.35)] backdrop-blur-xl sm:w-[calc(100%-3rem)] sm:px-6">
         <BrandSignature compact />
-        <div className="hidden items-center gap-5 font-mono text-[9px] uppercase tracking-[.15em] text-white/30 sm:flex">
-          <span className="flex items-center gap-2"><ShieldCheck className="size-3.5 text-cyan-200/70" /> Private session</span>
+        <div className="hidden items-center gap-5 font-mono text-[9px] uppercase tracking-[.15em] text-slate-400 sm:flex">
+          <span className="flex items-center gap-2"><ShieldCheck className="size-3.5 text-blue-500" /> Private session</span>
           <span className="flex items-center gap-2"><span className="status-dot" /> Engine online</span>
         </div>
       </header>
 
-      <main className="relative mx-auto flex w-full max-w-[1600px] flex-col gap-5 px-4 pb-8 sm:px-7 lg:px-10">
-        <section className="animate-fade-in-up flex flex-col gap-5 border-y border-white/8 py-5 sm:flex-row sm:items-center sm:justify-between">
+      <main className="relative mx-auto flex w-full max-w-[1520px] flex-col gap-5 px-4 pb-8 pt-5 sm:px-6 lg:px-0">
+        <section className="animate-fade-in-up flex flex-col gap-5 rounded-2xl border border-slate-200/80 bg-white/72 px-5 py-5 shadow-[0_18px_55px_-42px_rgba(25,42,78,.32)] backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div className="flex items-center gap-5">
-            <span className="hidden font-display text-5xl font-semibold tracking-[-.06em] text-white/10 sm:block">/04</span>
+            <span className="hidden font-display text-5xl font-semibold tracking-[-.06em] text-slate-200 sm:block">/04</span>
             <div>
               <p className="eyebrow">Current rewrite protocol</p>
               <div className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-2">
-                <h1 className="font-display text-3xl font-semibold tracking-[-.05em] text-white">{currentRewriteMode.title}</h1>
-                <p className="max-w-xl text-sm leading-6 text-white/34">{currentRewriteMode.description}</p>
+                <h1 className="font-display text-3xl font-semibold tracking-[-.05em] text-slate-900">{currentRewriteMode.title}</h1>
+                <p className="max-w-xl text-sm leading-6 text-slate-500">{currentRewriteMode.description}</p>
               </div>
             </div>
           </div>
@@ -524,7 +522,7 @@ export function RewriteStudio({
           ) : null}
         </section>
 
-        <section className="grid animate-fade-in-up gap-5 xl:grid-cols-[minmax(0,.82fr)_minmax(0,1.18fr)]" style={{ animationDelay: "100ms" }}>
+        <section className="grid animate-fade-in-up gap-5 xl:grid-cols-2 xl:items-start" style={{ animationDelay: "100ms" }}>
           <InputPanel
             descriptionText={inputDescriptionText}
             currentModel={connection.model}
@@ -570,7 +568,7 @@ export function RewriteStudio({
         <DialogContent className="max-h-[92vh] overflow-hidden">
           <DialogHeader className="relative pr-20">
             <div className="mb-3 flex items-center gap-3">
-              <span className="flex size-9 items-center justify-center rounded-xl border border-white/10 bg-white/[.045] text-cyan-200"><Cpu className="size-4" /></span>
+              <span className="flex size-9 items-center justify-center rounded-xl border border-blue-100 bg-blue-50 text-blue-600"><Cpu className="size-4" /></span>
               <span className="eyebrow">Connection instrument / 04</span>
             </div>
             <DialogTitle>模型配置</DialogTitle>
@@ -658,11 +656,11 @@ export function RewriteStudio({
 
       {copyFeedback ? (
         <div
-          className="pointer-events-none fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full border border-cyan-200/15 bg-[#0a1020]/90 px-5 py-3 text-sm font-medium text-white shadow-[0_22px_55px_-22px_rgba(0,0,0,.8)] backdrop-blur-2xl"
+          className="pointer-events-none fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full border border-blue-100 bg-white/95 px-5 py-3 text-sm font-medium text-slate-700 shadow-[0_22px_55px_-22px_rgba(25,42,78,.35)] backdrop-blur-2xl"
           aria-live="polite"
         >
           <span className="inline-flex items-center gap-2">
-            <WandSparkles className="size-4 text-cyan-200" />
+            <WandSparkles className="size-4 text-blue-600" />
             {copyFeedback === "已复制"
               ? "Markdown 原文已复制到剪贴板"
               : "复制失败，请稍后重试"}

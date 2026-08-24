@@ -7,11 +7,11 @@ export function BrandSignature({ compact = false }: { compact?: boolean }) {
         <Braces className="size-4" />
       </span>
       <span className="leading-none">
-        <span className="block font-display text-sm font-semibold tracking-[-0.02em] text-white">
+        <span className="block font-display text-sm font-semibold tracking-[-0.02em] text-slate-900">
           PAPER POLISH
         </span>
         {!compact ? (
-          <span className="mt-1 block font-mono text-[9px] uppercase tracking-[0.28em] text-white/38">
+          <span className="mt-1 block font-mono text-[9px] uppercase tracking-[0.28em] text-slate-400">
             AI writing instrument
           </span>
         ) : null}

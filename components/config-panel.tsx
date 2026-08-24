@@ -41,16 +41,16 @@ export function ConfigPanel({
     <div className="space-y-7 px-5 py-6 sm:px-8 sm:py-7">
       <section>
         <div className="mb-3 flex items-center justify-between gap-3">
-          <Label className="font-mono text-[10px] uppercase tracking-[.16em] text-white/48">使用方式</Label>
-          <span className="font-mono text-[9px] uppercase tracking-[.14em] text-white/22">Connection / 01</span>
+          <Label className="font-mono text-[10px] uppercase tracking-[.16em] text-slate-500">使用方式</Label>
+          <span className="font-mono text-[9px] uppercase tracking-[.14em] text-slate-400">Connection / 01</span>
         </div>
-        <div className="grid grid-cols-2 rounded-2xl border border-white/10 bg-black/20 p-1.5">
+        <div className="grid grid-cols-2 rounded-2xl border border-slate-200 bg-slate-100/80 p-1.5">
           <button
             type="button"
             onClick={() => onModeChange("system")}
             className={[
               "flex h-12 items-center justify-center gap-2 rounded-xl text-sm transition-all",
-              mode === "system" ? "bg-white/10 text-white shadow-[inset_0_1px_rgba(255,255,255,.1)]" : "text-white/36 hover:text-white/65",
+              mode === "system" ? "bg-white text-blue-700 shadow-sm" : "text-slate-500 hover:text-slate-800",
             ].join(" ")}
           >
             <Server className="size-4" /> 系统默认
@@ -60,21 +60,21 @@ export function ConfigPanel({
             onClick={() => onModeChange("custom")}
             className={[
               "flex h-12 items-center justify-center gap-2 rounded-xl text-sm transition-all",
-              mode === "custom" ? "bg-white/10 text-white shadow-[inset_0_1px_rgba(255,255,255,.1)]" : "text-white/36 hover:text-white/65",
+              mode === "custom" ? "bg-white text-blue-700 shadow-sm" : "text-slate-500 hover:text-slate-800",
             ].join(" ")}
           >
             <KeyRound className="size-4" /> 自定义 API
           </button>
         </div>
-        <p className="mt-3 text-sm leading-6 text-white/32">
+        <p className="mt-3 text-sm leading-6 text-slate-500">
           {isCustomMode ? "使用你自己的 OpenAI 兼容接口，配置仅保存在当前浏览器。" : "直接使用服务端预设接口，只需选择一个可用模型。"}
         </p>
       </section>
 
       {isCustomMode ? (
-        <section className="grid gap-4 rounded-2xl border border-white/8 bg-white/[.018] p-4 sm:grid-cols-2">
+        <section className="grid gap-4 rounded-2xl border border-slate-200 bg-slate-50/70 p-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="base-url" className="text-xs text-white/58">API 地址</Label>
+            <Label htmlFor="base-url" className="text-xs text-slate-600">API 地址</Label>
             <Input
               id="base-url" type="url" placeholder="https://example.com/v1" value={baseURL}
               onChange={(event) => onBaseURLChange(event.target.value)}
@@ -84,7 +84,7 @@ export function ConfigPanel({
             <InlineError message={fieldErrors.baseURL} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="api-key" className="text-xs text-white/58">API Key</Label>
+            <Label htmlFor="api-key" className="text-xs text-slate-600">API Key</Label>
             <div className="relative">
               <Input
                 id="api-key" type={showApiKey ? "text" : "password"} placeholder="sk-••••••••••••" value={apiKey}
@@ -103,8 +103,8 @@ export function ConfigPanel({
 
       <section>
         <div className="mb-3 flex items-center justify-between gap-3">
-          <Label htmlFor="model" className="font-mono text-[10px] uppercase tracking-[.16em] text-white/48">模型</Label>
-          <span className="font-mono text-[9px] uppercase tracking-[.14em] text-white/22">Model / 02</span>
+          <Label htmlFor="model" className="font-mono text-[10px] uppercase tracking-[.16em] text-slate-500">模型</Label>
+          <span className="font-mono text-[9px] uppercase tracking-[.14em] text-slate-400">Model / 02</span>
         </div>
         <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
           <Select value={model || undefined} onValueChange={onModelChange} disabled={isModelsLoading || models.length === 0}>
@@ -121,26 +121,26 @@ export function ConfigPanel({
           </Button>
         </div>
 
-        <div className="mt-4 flex items-start gap-3 rounded-xl border border-white/8 bg-white/[.025] px-4 py-3">
-          {models.length > 0 && !modelsError ? <CircleCheck className="mt-0.5 size-4 shrink-0 text-cyan-200" /> : <Server className="mt-0.5 size-4 shrink-0 text-white/30" />}
+        <div className="mt-4 flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50/60 px-4 py-3">
+          {models.length > 0 && !modelsError ? <CircleCheck className="mt-0.5 size-4 shrink-0 text-emerald-600" /> : <Server className="mt-0.5 size-4 shrink-0 text-slate-400" />}
           <div>
-            <p className="text-xs leading-5 text-white/46">{modelsStatus}</p>
-            <p className="mt-1 font-mono text-[9px] uppercase tracking-[.13em] text-white/22">当前来源：{isCustomMode ? "自定义 API" : "系统默认配置"}</p>
+            <p className="text-xs leading-5 text-slate-600">{modelsStatus}</p>
+            <p className="mt-1 font-mono text-[9px] uppercase tracking-[.13em] text-slate-400">当前来源：{isCustomMode ? "自定义 API" : "系统默认配置"}</p>
           </div>
         </div>
 
         <InlineError message={fieldErrors.model || modelsError} />
 
         {models.length === 0 && !isModelsLoading && (Boolean(modelsError) || Boolean(model.trim())) ? (
-          <div className="mt-4 rounded-2xl border border-dashed border-white/12 bg-black/15 p-4">
-            <Label htmlFor="manual-model" className="text-xs text-white/58">手动填写模型名</Label>
+          <div className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">
+            <Label htmlFor="manual-model" className="text-xs text-slate-600">手动填写模型名</Label>
             <Input
               id="manual-model" type="text" placeholder="例如 gpt-4.1" value={model}
               onChange={(event) => onModelChange(event.target.value)}
               onInput={(event) => onModelChange((event.target as HTMLInputElement).value)}
               autoComplete="off" spellCheck={false} className="mt-2 font-mono"
             />
-            <p className="mt-2 text-xs leading-5 text-white/28">兼容接口未开放模型列表时，可直接填写模型名继续生成。</p>
+            <p className="mt-2 text-xs leading-5 text-slate-500">兼容接口未开放模型列表时，可直接填写模型名继续生成。</p>
           </div>
         ) : null}
       </section>

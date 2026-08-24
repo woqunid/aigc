@@ -9,12 +9,12 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "border border-white/15 bg-[linear-gradient(110deg,#596cff,#745bff)] text-white shadow-[0_16px_44px_-16px_rgba(85,104,255,.9),inset_0_1px_rgba(255,255,255,.25)] hover:-translate-y-0.5 hover:border-cyan-200/30 hover:shadow-[0_20px_54px_-15px_rgba(85,104,255,.95)] hover:brightness-110 active:translate-y-0",
+          "border border-[#3157d5] bg-[#3157d5] text-white shadow-[0_12px_28px_-14px_rgba(49,87,213,.65)] hover:-translate-y-0.5 hover:bg-[#284bbd] hover:shadow-[0_16px_34px_-14px_rgba(49,87,213,.7)] active:translate-y-0",
         secondary:
-          "border border-white/10 bg-white/[.07] text-white shadow-[inset_0_1px_rgba(255,255,255,.08)] hover:border-white/20 hover:bg-white/[.11]",
+          "border border-slate-200 bg-slate-100 text-slate-700 hover:border-slate-300 hover:bg-slate-200/80",
         outline:
-          "border border-white/12 bg-white/[.035] text-white/78 backdrop-blur-xl hover:border-cyan-200/30 hover:bg-white/[.075] hover:text-white",
-        ghost: "text-white/58 hover:bg-white/[.06] hover:text-white",
+          "border border-slate-200 bg-white/80 text-slate-600 shadow-sm hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700",
+        ghost: "text-slate-500 hover:bg-slate-100 hover:text-slate-800",
       },
       size: {
         default: "h-11 px-5 py-2",
