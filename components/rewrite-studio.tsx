@@ -1,7 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowLeft, WandSparkles } from "lucide-react";
+import { ArrowLeft, Cpu, ShieldCheck, WandSparkles } from "lucide-react";
+import { ArtCanvas } from "@/components/art-canvas";
+import { BrandSignature } from "@/components/brand-signature";
 import { ConfigPanel } from "@/components/config-panel";
 import { InputPanel } from "@/components/input-panel";
 import { OutputPanel } from "@/components/output-panel";
@@ -491,40 +493,38 @@ export function RewriteStudio({
 
   return (
     <div className="relative isolate min-h-dvh overflow-hidden">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.14),transparent_62%)]" />
-      <div className="pointer-events-none absolute left-[-12rem] top-28 size-80 rounded-full bg-sky-200/30 blur-3xl" />
-      <div className="pointer-events-none absolute right-[-8rem] top-16 size-72 rounded-full bg-blue-300/20 blur-3xl" />
+      <ArtCanvas />
+      <div className="editorial-grid absolute inset-0 -z-10" />
+      <div className="aurora-orb -right-36 top-[-16rem] -z-10 size-[32rem] opacity-50" />
 
-      <main className="animate-fade-in-up relative mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-6 sm:px-6 lg:px-8 xl:py-10">
-        <section className="glass-panel flex flex-col gap-4 rounded-[30px] border border-white/70 px-5 py-5 shadow-[0_28px_70px_-42px_rgba(15,23,42,0.38)] sm:flex-row sm:items-center sm:justify-between sm:px-7">
-          <div className="space-y-2">
-            <p className="text-xs font-medium uppercase tracking-[0.22em] text-blue-700/80">
-              当前工作模式
-            </p>
-            <div className="space-y-1">
-              <h1 className="font-display text-2xl font-semibold tracking-[-0.04em] text-slate-900">
-                {currentRewriteMode.title}
-              </h1>
-              <p className="max-w-2xl text-sm leading-6 text-slate-600">
-                {currentRewriteMode.description}
-              </p>
+      <header className="mx-auto flex w-full max-w-[1600px] items-center justify-between px-5 py-5 sm:px-8 lg:px-10">
+        <BrandSignature compact />
+        <div className="hidden items-center gap-5 font-mono text-[9px] uppercase tracking-[.15em] text-white/30 sm:flex">
+          <span className="flex items-center gap-2"><ShieldCheck className="size-3.5 text-cyan-200/70" /> Private session</span>
+          <span className="flex items-center gap-2"><span className="status-dot" /> Engine online</span>
+        </div>
+      </header>
+
+      <main className="relative mx-auto flex w-full max-w-[1600px] flex-col gap-5 px-4 pb-8 sm:px-7 lg:px-10">
+        <section className="animate-fade-in-up flex flex-col gap-5 border-y border-white/8 py-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-5">
+            <span className="hidden font-display text-5xl font-semibold tracking-[-.06em] text-white/10 sm:block">/04</span>
+            <div>
+              <p className="eyebrow">Current rewrite protocol</p>
+              <div className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-2">
+                <h1 className="font-display text-3xl font-semibold tracking-[-.05em] text-white">{currentRewriteMode.title}</h1>
+                <p className="max-w-xl text-sm leading-6 text-white/34">{currentRewriteMode.description}</p>
+              </div>
             </div>
           </div>
-
           {onBackToModeSelect ? (
-            <Button
-              type="button"
-              variant="outline"
-              className="rounded-full px-5"
-              onClick={onBackToModeSelect}
-            >
-              <ArrowLeft className="size-4" />
-              重新选择模式
+            <Button type="button" variant="outline" onClick={onBackToModeSelect}>
+              <ArrowLeft className="size-4" />重新选择模式
             </Button>
           ) : null}
         </section>
 
-        <section className="grid gap-6 xl:grid-cols-[minmax(0,470px)_minmax(0,1fr)]">
+        <section className="grid animate-fade-in-up gap-5 xl:grid-cols-[minmax(0,.82fr)_minmax(0,1.18fr)]" style={{ animationDelay: "100ms" }}>
           <InputPanel
             descriptionText={inputDescriptionText}
             currentModel={connection.model}
@@ -568,14 +568,16 @@ export function RewriteStudio({
         }}
       >
         <DialogContent className="max-h-[92vh] overflow-hidden">
-          <DialogHeader>
-            <DialogTitle>
-              {draftConfig.mode === "custom" ? "自定义接口配置" : "选择系统默认模型"}
-            </DialogTitle>
+          <DialogHeader className="relative pr-20">
+            <div className="mb-3 flex items-center gap-3">
+              <span className="flex size-9 items-center justify-center rounded-xl border border-white/10 bg-white/[.045] text-cyan-200"><Cpu className="size-4" /></span>
+              <span className="eyebrow">Connection instrument / 04</span>
+            </div>
+            <DialogTitle>模型配置</DialogTitle>
             <DialogDescription>
               {draftConfig.mode === "custom"
-                ? "填写你自己的 API 地址和 API Key，检测可用模型后再确认使用。"
-                : "系统默认模式会直接使用服务端预设接口。请选择一个模型，然后点击确认使用。"}
+                ? "接入你自己的 OpenAI 兼容接口，检测可用模型后确认使用。"
+                : "使用系统预设接口并选择一个可用模型，配置会在当前浏览器保留。"}
             </DialogDescription>
           </DialogHeader>
 
@@ -656,11 +658,11 @@ export function RewriteStudio({
 
       {copyFeedback ? (
         <div
-          className="pointer-events-none fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full border border-border bg-white/92 px-4 py-2 text-sm font-medium text-foreground shadow-[0_18px_42px_-24px_rgba(15,23,42,0.35)]"
+          className="pointer-events-none fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full border border-cyan-200/15 bg-[#0a1020]/90 px-5 py-3 text-sm font-medium text-white shadow-[0_22px_55px_-22px_rgba(0,0,0,.8)] backdrop-blur-2xl"
           aria-live="polite"
         >
           <span className="inline-flex items-center gap-2">
-            <WandSparkles className="size-4 text-blue-600" />
+            <WandSparkles className="size-4 text-cyan-200" />
             {copyFeedback === "已复制"
               ? "Markdown 原文已复制到剪贴板"
               : "复制失败，请稍后重试"}
